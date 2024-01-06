@@ -33,3 +33,5 @@ MANIFEST
 # Data files
 *.csv
 model/
+images/
+sandbox.py
