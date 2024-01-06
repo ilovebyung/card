@@ -18,7 +18,7 @@ tf.test.is_gpu_available(cuda_only=True)
 # load library
 
 # 2.load training images
-path = "e:/images"
+path = "/home/byungsoo/Documents/card/images"
 os.chdir(path)
 files = []
 for file in os.listdir():
@@ -29,8 +29,6 @@ for file in os.listdir():
 file = files[0]
 image = cv2.imread(file,0)
 dim = image.shape
-# size = 400
-# dim = (500, 1145)
 height = dim[0]
 width = dim[1]
 
@@ -132,14 +130,14 @@ plt.show()
 
 # save and load a mode
 autoencoder.save('./model/')
-autoencoder = keras.models.load_model('./model/')
+autoencoder = keras.models.load_model('/home/byungsoo/Documents/card/model/')
 
 '''
 Make inferences for pass and fail
 '''
 # make an inference
-file = "e:/images/anomaly/template.jpg" # pass
-file = "e:/images/card/anomaly/fail.jpg"    #fail
+file = "/home/byungsoo/Documents/card/images/anomaly/template.jpg" # pass
+file = "/home/byungsoo/Documents/card/images/anomaly/fail.jpg"    #fail
 image = cv2.imread(file, 0)
 plt.imshow(image, cmap='gray')
 
@@ -151,6 +149,16 @@ decoded = autoencoder.decoder(encoded)
 loss = tf.keras.losses.mse(decoded, normalized_data)
 sample_loss = np.mean(loss) + np.std(loss)
 print(sample_loss)
+
+def calulate_loss(image):
+    normalized_data = image.astype('float32') / 255.
+    # decode an image and calulate loss
+    encoded = autoencoder.encoder(normalized_data.reshape(-1, dim[0], dim[1]))
+    decoded = autoencoder.decoder(encoded)
+    loss = tf.keras.losses.mse(decoded, normalized_data)
+    sample_loss = np.mean(loss) + np.std(loss)
+    print(sample_loss)
+    return round(sample_loss,4)
 
 # loss graph
 os.chdir("e:/images")

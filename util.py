@@ -45,34 +45,17 @@ autoencoder.compile(optimizer='adam', loss=losses.MeanSquaredError())
 autoencoder = keras.models.load_model('/home/byungsoo/Documents/card/model/')
 
 # 4.utility functions
-def sample_loss(file):
-    # data = np.ndarray(shape=(1, height, width), dtype=np.float32)
-    # individual sample
-    # Load an image from a file
-    data = cv2.imread(str(file), 0)
-    # resize to make sure data consistency
-    # resized_data = cv2.resize(data, (size, size))
-    # nomalize img
-    # normalized_data = resized_data.astype('float32') / 255.
-    normalized_data = data.astype('float32') / 255.
+def image_loss(image):
+    normalized_data = image.astype('float32') / 255.
     # test an image
     encoded = autoencoder.encoder(normalized_data.reshape(-1, height, width))
     decoded = autoencoder.decoder(encoded)
     loss = tf.keras.losses.mse(decoded, normalized_data)
     sample_loss = np.mean(loss) + np.std(loss)
+    sample_loss = round(sample_loss,4)
     return sample_loss
 
-def calulate_loss(image):
-    normalized_data = image.astype('float32') / 255.
-    # decode an image and calulate loss
-    encoded = autoencoder.encoder(normalized_data.reshape(-1, dim[0], dim[1]))
-    decoded = autoencoder.decoder(encoded)
-    loss = tf.keras.losses.mse(decoded, normalized_data)
-    sample_loss = np.mean(loss) + np.std(loss)
-    print(sample_loss)
-    return round(sample_loss,4)
-
-def generate_decoded(image):
+def decoded_image(image):
     # generate decoded image
     normalized_data = image.astype('float32') / 255.
     # decode an image and calulate loss
@@ -80,11 +63,11 @@ def generate_decoded(image):
     decoded = autoencoder.decoder(encoded)
     decoded_image = decoded.numpy()
     decoded_image = decoded_image.reshape(height, width)
-    decoded_image = (decoded_image*255).astype(np.uint8)
+    decoded_image = (decoded_image*255)
     # plt.imshow(decoded_image, cmap='gray')
-    return decoded_image
+    return decoded_image.astype(np.uint8)
 
-def diff(a, b):
+def diff_image(a, b):
     '''
     subtract differences between autoencoder and reconstructed image
     '''
@@ -110,14 +93,14 @@ if __name__ == "__main__":
     image = cv2.imread(file, 0)
     plt.imshow(image, cmap='gray')
 
-    sample_loss = sample_loss(file)
-    print(sample_loss)
+    loss = image_loss(image)
+    print(loss)
 
     # compare images
-    decoded_image = generate_decoded(image)
+    decoded = decoded_image(image)
 
     # a = decoded.numpy()
-    difference = diff(image,decoded_image)
+    difference = diff_image(image,decoded)
     plt.imshow(difference, cmap='magma')
 
 
