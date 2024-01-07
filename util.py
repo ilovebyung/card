@@ -86,20 +86,21 @@ if __name__ == "__main__":
     '''
     Make inferences for pass and fail
     '''
-    # make an inference
+    # read a file
     file = "/home/byungsoo/Documents/card/images/anomaly/template.jpg" # pass
     file = "/home/byungsoo/Documents/card/images/anomaly/fail.jpg"    #fail
   
     image = cv2.imread(file, 0)
     plt.imshow(image, cmap='gray')
 
+    # calculate image loss
     loss = image_loss(image)
     print(loss)
 
-    # compare images
+    # calculate decoded image
     decoded = decoded_image(image)
 
-    # a = decoded.numpy()
+    # show difference
     difference = diff_image(image,decoded)
     plt.imshow(difference, cmap='magma')
 

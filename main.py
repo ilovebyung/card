@@ -5,6 +5,7 @@ import tensorflow as tf
 import random
 from PIL import Image, ImageOps
 import numpy as np
+import cv2
 import util
 
 # hide deprication warnings which directly don't affect the working of the application
@@ -37,7 +38,7 @@ with st.sidebar:
         st.subheader(" Defect detection helps an user to spot detected area.")
 
 st.write("""
-         # Defect Detection with comparison
+         # Defect Detection  
          """
          )
 
@@ -57,6 +58,23 @@ if file is None:
 else:
     image = Image.open(file)
     st.image(image, use_column_width=True)
+
+    '''process comparision from tf'''
+    # image = cv2.imread(file, 0)
+    # plt.imshow(image, cmap='gray')
+
+    # calculate image loss
+    numpy_array = np.array(image)
+    loss = util.image_loss(numpy_array)
+    st.write(loss)
+
+    # calculate decoded image
+    decoded = util.decoded_image(numpy_array)
+
+    # show difference
+    difference = util.diff_image(numpy_array,decoded)
+    st.image(difference, use_column_width=True)
+
     # predictions = import_and_predict(image, model)
     # x = random.randint(98,99)+ random.randint(0,99)*0.01
     # st.sidebar.error("Accuracy : " + str(x) + " %")
