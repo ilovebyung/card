@@ -8,7 +8,11 @@ import pandas as pd
 from tensorflow import keras
 import tensorflow.keras as keras
 from sklearn.metrics import accuracy_score, precision_score, recall_score
-from tensorflow.python.keras import layers, losses
+# from tensorflow.python.keras import layers, losses
+from tensorflow.keras.layers import Dense, Input
+from tensorflow.keras import Sequential
+from tensorflow.keras import layers, losses
+from tensorflow.keras.activations import sigmoid
 from tensorflow.python.keras.models import Model
 from tensorflow.python.keras.layers.core import Dropout
 import tensorflow as tf
@@ -161,7 +165,7 @@ def calulate_loss(image):
     return round(sample_loss,4)
 
 # loss graph
-os.chdir("e:/images")
+os.chdir("/home/byungsoo/Documents/card/images")
 sample_losses = []
 for file in os.listdir():
     if file.endswith("jpg"):
