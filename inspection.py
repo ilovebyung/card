@@ -56,8 +56,11 @@ else:
     # calculate decoded image
     decoded = util.decoded_image(numpy_array)
 
-    # show difference
-    gray = util.diff_image(numpy_array,decoded)
+    # # show difference
+    # gray = util.diff_image(numpy_array,decoded)
+    # st.image(gray, use_column_width=True)
+
+    gray = util.show_diff(numpy_array,decoded)
     st.image(gray, use_column_width=True)
 
     # st.write(f"Diagnosed Image with different colormap")
