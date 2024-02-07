@@ -14,7 +14,7 @@ warnings.filterwarnings("ignore")
 
 # set some pre-defined configurations for the page, such as the page title, logo-icon, page loading state (whether the page is loaded automatically or you need to perform some action for loading)
 st.set_page_config(
-    page_title="Detect Detection",
+    page_title="Detect Detection Home",
     initial_sidebar_state = 'auto'
 )
 
@@ -32,37 +32,6 @@ with st.sidebar:
         # st.title("Defect Detection")
         st.subheader(" Defect Detection helps an user to identify a defected part and spot detected area")
 
-# st.write(""" Defect Detection """)
 
-file = st.file_uploader("", type=["jpg", "png"])
+st.title(""" Defect Detection Home """)
 
-        
-if file is None:
-    st.text("Please upload an image file")
-else:
-    image = Image.open(file)
-    st.image(image, use_column_width=True)
-
-    # calculate image loss
-    numpy_array = np.array(image)
-    loss = util.image_loss(numpy_array)
-
-    if loss > util.threshold:
-      st.write(f":red[Loss of {loss} is greater than threshold ]")
-    else:
-      st.write(f":blue[Loss of {loss} is within range ]")
-
-    st.write(f"Diagnosed Image")
-    # calculate decoded image
-    decoded = util.decoded_image(numpy_array)
-
-    # # show difference
-    # gray = util.diff_image(numpy_array,decoded)
-    # st.image(gray, use_column_width=True)
-
-    gray = util.show_diff(numpy_array,decoded)
-    st.image(gray, use_column_width=True)
-
-    # st.write(f"Diagnosed Image with different colormap")
-    # diff_image_colormap = cv2.applyColorMap(gray, cv2.COLORMAP_HOT)
-    # st.image(diff_image_colormap, use_column_width=True)
