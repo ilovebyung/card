@@ -5,32 +5,23 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 from PIL import Image, ImageOps
 import numpy as np
-import cv2
+import datetime
 import util
+from sqlalchemy import create_engine 
+from sqlalchemy.sql import text
 
-# hide deprication warnings which directly don't affect the working of the application
-# import warnings
-# warnings.filterwarnings("ignore")
-
-# # set some pre-defined configurations for the page, such as the page title, logo-icon, page loading state (whether the page is loaded automatically or you need to perform some action for loading)
-# st.set_page_config(
-#     page_title="Detect Detection",
-#     initial_sidebar_state = 'auto'
-# )
-
-# # hide the part of the code, as this is just for adding some custom CSS styling but not a part of the main idea 
-# hide_streamlit_style = """
-# 	<style>
-#   #MainMenu {visibility: hidden;}
-# 	footer {visibility: hidden;}
-#   </style>
-# """
-# st.markdown(hide_streamlit_style, unsafe_allow_html=True) # hide the CSS code from the screen as they are embedded in markdown text. Also, allow streamlit to unsafely process as HTML
-
+def format_filename():
+  """Returns the current date in YYYYMMDD_mmddss format."""
+  now = datetime.datetime.now()
+  formatted_filename = now.strftime("%Y%m%d") + '_' +  now.strftime("%H%M%S") + '.jpg'
+  return formatted_filename
 
 with st.sidebar:
-        # st.title("Defect Detection")
-        st.subheader(" Defect Detection helps an user to identify a defected part and spot detected area")
+  # st.title("Defect Detection")
+  st.subheader(" Defect Detection helps an user to identify a defected part and spot detected area")
+
+# Create the SQL connection  
+connection = st.connection('log', type='sql')
 
 # st.write(""" Defect Detection """)
 
@@ -50,6 +41,13 @@ else:
 
     if loss > util.threshold:
       st.write(f":red[Loss of {loss} is greater than threshold ]")
+
+      # insert into log
+      with connection.session as session:
+        formatted_filename = format_filename()
+        session.execute(text(f"insert into log (date_time, material, measurement, detected) values ('{formatted_filename}', '5101341', {loss}, 1) ;"))
+        session.commit()
+
     else:
       st.write(f":blue[Loss of {loss} is within range ]")
 
@@ -57,13 +55,7 @@ else:
     # calculate decoded image
     decoded = util.decoded_image(numpy_array)
 
-    # # show difference
+    # show difference
     gray = util.diff_image(numpy_array,decoded)
     st.image(gray, use_column_width=True)
 
-    # gray = util.show_diff(numpy_array,decoded)
-    # st.image(gray, use_column_width=True)
-
-    # st.write(f"Diagnosed Image with different colormap")
-    # diff_image_colormap = cv2.applyColorMap(gray, cv2.COLORMAP_HOT)
-    # st.image(diff_image_colormap, use_column_width=True)

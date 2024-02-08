@@ -11,35 +11,34 @@ with st.sidebar:
         # st.title("Defect Detection")
         st.subheader(" Detected defects by date")
 
+def format_date(date_str):
+  """Returns the current date in YYYYMMDD format."""
+  fmt = '%Y-%m-%d'
+  new_format = '%Y%m%d'
 
-with open('sample_losses.pkl', 'rb') as f:
-    loss_data = pickle.load(f)
+  date_obj = datetime.datetime.strptime(date_str, fmt)
+  formatted_date = date_obj.strftime(new_format)
+  return formatted_date
 
-
-# input inspection date 2024-02-07
+# input date in yyyy-mm-dd format
 date = st.date_input("What was the inspection date?", date.today())
-st.write("date", date)
+formatted_date = format_date(str(date))
+# st.write("date", formatted_date)
+
+# Create the SQL connection  
+connection = st.connection('log', type='sql')
+
+# Select some data with connection.session.
+with connection.session as session:
+    query = f"select * from log where date_time like '{formatted_date}%';"
+    log = session.execute(text(query))
+    df = pd.DataFrame(log)
+    st.write(f"Defect found on {formatted_date}", df)
+
 
 # # extract date to select only the input date
 # df['date'] = pd.to_datetime(df['date_time']).dt.date
 
 # if date == pd.to_datetime(df['date_time']).dt.date: 
-#         st.write("Defect found at ", df)
+#         st.write("Defect found on ", df)
 
-
-
-# Create the SQL connection to pets_db as specified in your secrets file.
-connection = st.connection('log', type='sql')
-
-with connection.session as session:
-    session.execute(text('CREATE TABLE IF NOT EXISTS log (date_time TEXT, material INTEGER, measurement INTEGER, detected INTEGER);'))
-    session.execute(text('CREATE TABLE IF NOT EXISTS material (material INTEGER, description TEXT, min INTEGER, max INTEGER);'))
-    session.commit()
-
-# # Select some data with conn.session.
-# with connection.session as s:
-#     rows = s.execute("select * from log")
-#     df = pd.DataFrame(pet_owners)
-#     st.write("Defect found at ", df)
-    
-    
