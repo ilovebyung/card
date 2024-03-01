@@ -29,9 +29,14 @@ MANIFEST
 
 # Image files
 *.jpg
+*.jpeg
 
 # Data files
 *.csv
+*.pcl
+*.db
+
 model/
 images/
 sandbox.py
+
