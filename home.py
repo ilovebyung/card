@@ -15,7 +15,9 @@ warnings.filterwarnings("ignore")
 # set some pre-defined configurations for the page, such as the page title, logo-icon, page loading state (whether the page is loaded automatically or you need to perform some action for loading)
 st.set_page_config(
     page_title="Detect Detection Home",
-    initial_sidebar_state = 'auto'
+    page_icon=":eye:",
+    # layout="wide",
+    initial_sidebar_state="auto",
 )
 
 # hide the part of the code, as this is just for adding some custom CSS styling but not a part of the main idea 

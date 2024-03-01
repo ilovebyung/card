@@ -10,7 +10,7 @@ with st.sidebar:
 file = st.file_uploader("", type=["jpg", "png"])
 
 # read template images
-template = cv2.imread('/home/byungsoo/Documents/card/images/anomaly/template.jpg',0)
+template = cv2.imread('/home/byungsoo/Documents/card/images/preprocessing/template.jpg',0)
 
 if file is None:
     st.text("Please upload an image file")
